@@ -3,7 +3,10 @@ By Al Sweigart al@inventwithpython.com
 
 Fetch your public IP address from external sources."""
 
-__version__ = '2020.8.5'
+__version__ = '2021.8.5'
+
+# TODO - test mode and whatismyip checker
+
 
 import re
 import threading
@@ -48,13 +51,16 @@ SOURCES = ('https://ifconfig.co/ip',
            'https://ipinfo.io/ip',
            'https://ipecho.net/plain',
            'https://ident.me',
-           'http://curlmyip.net',
+           'https://curlmyip.net',
            'https://api.ipify.org',
            'https://ipaddr.site')
 
 
-def whatismyip(minSources=3, timeout=1, numVerification=2):
-    allResults = whataremyips(minSources, timeout, numVerification)
+def whatismyip(minSources=3, timeout=1, numVerification=2, sources=None):
+    if sources is None:
+        sources = SOURCES  # Use the tuple of built-in sources by default.
+
+    allResults = whataremyips(minSources=minSources, timeout=timeout, numVerification=numVerification, sources=sources)
     resultsSet = frozenset(allResults.values())
 
     if len(resultsSet) == 1:
@@ -67,10 +73,13 @@ def whatismyip(minSources=3, timeout=1, numVerification=2):
 
 
 
-def whataremyips(minSources=3, timeout=1, numVerification=2):
+def whataremyips(minSources=3, timeout=1, numVerification=2, sources=None):
+    if sources is None:
+        sources = SOURCES  # Use the tuple of built-in sources by default.
+
     results = {}
     allThreads = []
-    for source in SOURCES:
+    for source in sources:
         t = threading.Thread(target=_requestIpSourceWebsite, args=(source, results, timeout))
         t.start()
         allThreads.append(t)
@@ -79,7 +88,6 @@ def whataremyips(minSources=3, timeout=1, numVerification=2):
         t.join()
 
     return results
-
 
 
 def whatismyipv4(minSources=3, timeout=1, numVerification=2):
