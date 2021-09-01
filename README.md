@@ -30,3 +30,10 @@ The whatismyip module uses [the Requests module](https://docs.python-requests.or
 # Road Map of Future Features
 
 The whatismyip module is meant to be simple and small, so not many future features are planned. I might add something to grab geolocation information as well, but that's about it.
+
+
+
+Support
+-------
+
+If you find this project helpful and would like to support its development, [consider donating to its creator on Patreon](https://www.patreon.com/AlSweigart).
