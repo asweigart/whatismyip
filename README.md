@@ -3,17 +3,25 @@ Fetch your public IP address from external sources with Python.
 
 Install with `pip install whatismyip`
 
+Example:
+
     >>> import whatismyip
+    >>> whatismyip.amionline()
+    True
     >>> whatismyip.whatismyip()
-    '52.250.42.157'
+    '69.89.31.226'
+    >>> whatismyip.whatismyipv4()
+    '69.89.31.226'
+    >>> whatismyip.whatismyipv6()
+    '2345:0425:2CA1:0000:0000:0567:5673:23b5'
+
+On average these ip-finding functions take about half a second to run. Your results may vary.
 
 Because whatismyip relies on online services, you always want to update to the latest version. This module uses [calendar versioning](https://calver.org/), such as version 2021.8.5 for the version released on August 5, 2021.
 
-2021/08/26 TODO: This documentation is currently incomplete.
-
 # How Does whatismyip Work?
 
-There are several public websites that return your IP address (as it appears to them):
+There are several public STUN (Session Traversal Utilities for NAT) servers that return your IP address (as it appears to them). There are also several public websites that you can view in your browser:
 
 * [https://ifconfig.co/ip](https://ifconfig.co/ip)
 * [https://icanhazip.com](https://icanhazip.com)
@@ -24,13 +32,7 @@ There are several public websites that return your IP address (as it appears to 
 * [https://api.ipify.org](https://api.ipify.org)
 * [https://ipaddr.site](https://ipaddr.site)
 
-The whatismyip module uses [the Requests module](https://docs.python-requests.org/en/master/index.html) to make connections to these sites, then returns the IPv4 or IPv6 address the give.
-
-
-# Road Map of Future Features
-
-The whatismyip module is meant to be simple and small, so not many future features are planned. I might add something to grab geolocation information as well, but that's about it.
-
+The whatismyip module does not have any dependencies outside the Python standard library. It does not require Requests to be installed.
 
 
 Support
