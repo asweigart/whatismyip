@@ -12,9 +12,13 @@ Example:
     '69.89.31.226'
     >>> whatismyip.whatismyipv6()
     '2345:0425:2CA1:0000:0000:0567:5673:23b5'
+    >>> whatismyip.whatismylocalip()  # Returns local IPs of all network cards.
+    ('192.168.189.1', '192.168.220.1', '192.168.56.1', '192.168.1.201')
+    >>> whatismyip.whatismyhostname()
+    'GIBSON'
 """
 
-__version__ = '2022.2.20'
+__version__ = '2022.2.21'
 
 import re
 import binascii
@@ -22,7 +26,7 @@ import random
 import socket
 import urllib.request
 
-from typing import Optional, Pattern
+from typing import Optional, Pattern, Tuple
 from collections.abc import Sequence
 
 # From https://stackoverflow.com/a/5284410/1893164
@@ -55,17 +59,21 @@ fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|     # fe80::7:8%eth0   fe80::7:8%
 # If you have an IPv4 *and* IPv6 address, these websites give you your IPv4 address.
 # (I haven't tested what they do if you only have an IPv6 address.)
 IP4_WEBSITES = (#'https://ifconfig.co/ip',  # This is down as of 2022/02/19
-           'https://ipinfo.io/ip',
-           'https://ipecho.net/plain',
-           'https://api.ipify.org',
-           'https://ipaddr.site',)
+                'https://ipinfo.io/ip',
+                'https://ipecho.net/plain',
+                'https://api.ipify.org',
+                'https://ipaddr.site',
+                'https://ifconfig.me/ip')
 
 IP6_WEBSITES = ('https://icanhazip.com',
-            'https://ident.me',
-            'https://curlmyip.net',
-            'https://ip.seeip.org',)
+                'https://ident.me',
+                'https://curlmyip.net',
+                'https://ip.seeip.org',)
 
 IP_WEBSITES = IP4_WEBSITES + IP6_WEBSITES
+
+# TODO - add other websites that provide this info in a web page, along with a regex that can pull out the IP address.
+# Example: http://checkip.dyndns.org
 
 # Popular web servers to test if we are online.
 ONLINE_WEB_SERVERS = ('google.com', 'youtube.com', 'facebook.com', 'yahoo.com', 'reddit.com', 'wikipedia.org', 'ebay.com', 'bing.com', 'netflix.com', 'office.com', 'twitch.com', 'cnn.com', 'linkedin.com')
@@ -93,8 +101,8 @@ def whatismyip():
     # Note: STUN servers only return IPv4 addresses. This means that whatismyip() will almost
     # always return the IPv4 address of users who have both IPv4 and IPv6 addresses.
     # (TODO: Test this claim.)
-    for i in range(3): # Make 3 attempts, otherwise assume accessing STUN is blocked for some reason.
-        ip = _getIpFromSTUN()
+    for i in range(3):  # Make 3 attempts, otherwise assume accessing STUN is blocked for some reason.
+        ip = _getIpFromSTUN()  # Check a random STUN server.
         if ip is not None:
             return ip
 
@@ -108,8 +116,8 @@ def whatismyipv4():
 
     # Get ipv4 address from STUN servers first (they tend to be faster than the websites):
     # Note: STUN servers only return IPv4 addresses. (TODO: Test this claim.)
-    for i in range(3): # Make 3 attempts, otherwise assume accessing STUN is blocked for some reason.
-        ip = _getIpFromSTUN()
+    for i in range(3):  # Make 3 attempts, otherwise assume accessing STUN is blocked for some reason.
+        ip = _getIpFromSTUN()  # Check a random STUN server.
         if ip is not None:
             return ip
 
@@ -121,6 +129,15 @@ def whatismyipv6():
     """Returns a str of your IPv6 address. If offline or the IP address can't
     be determined, this returns None."""
     return _getIpFromHTTPS(6)
+
+
+def whatismylocalip():
+    return tuple(socket.gethostbyname_ex(socket.gethostname())[2])
+
+
+def whatismyhostname():
+    # type: () -> str
+    return socket.gethostname()
 
 
 def amionline():
@@ -158,7 +175,7 @@ def _getIpFromHTTPS(ipVersion=None, sources=None):
         ipWebsites = list(sources)
     random.shuffle(ipWebsites)
 
-    for ipWebsite in ipWebsites:
+    for ipWebsite in ipWebsites:  # Go through all ip website sources, return the first valid response.
         try:
             response = urllib.request.urlopen(ipWebsite)
 

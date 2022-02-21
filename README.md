@@ -14,6 +14,10 @@ Example:
     '69.89.31.226'
     >>> whatismyip.whatismyipv6()
     '2345:0425:2CA1:0000:0000:0567:5673:23b5'
+    >>> whatismyip.whatismylocalip()  # Returns local IPs of all network cards.
+    ('192.168.189.1', '192.168.220.1', '192.168.56.1', '192.168.1.201')
+    >>> whatismyip.whatismyhostname()
+    'GIBSON'
 
 On average these ip-finding functions take about half a second to run. Your results may vary.
 
@@ -31,6 +35,7 @@ There are several public STUN (Session Traversal Utilities for NAT) servers that
 * [https://curlmyip.net](https://curlmyip.net)
 * [https://api.ipify.org](https://api.ipify.org)
 * [https://ipaddr.site](https://ipaddr.site)
+* [https://ip.seeip.org](https://ip.seeip.org)
 
 The whatismyip module does not have any dependencies outside the Python standard library. It does not require Requests to be installed.
 
