@@ -58,11 +58,12 @@ IP4_WEBSITES = (#'https://ifconfig.co/ip',  # This is down as of 2022/02/19
            'https://ipinfo.io/ip',
            'https://ipecho.net/plain',
            'https://api.ipify.org',
-           'https://ipaddr.site')
+           'https://ipaddr.site',)
 
 IP6_WEBSITES = ('https://icanhazip.com',
             'https://ident.me',
-            'https://curlmyip.net',)
+            'https://curlmyip.net',
+            'https://ip.seeip.org',)
 
 IP_WEBSITES = IP4_WEBSITES + IP6_WEBSITES
 
