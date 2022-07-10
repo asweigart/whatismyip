@@ -18,7 +18,7 @@ Example:
     'GIBSON'
 """
 
-__version__ = '2022.2.21'
+__version__ = '2022.7.10'
 
 import re
 import binascii
@@ -63,12 +63,17 @@ IP4_WEBSITES = (#'https://ifconfig.co/ip',  # This is down as of 2022/02/19
                 'https://ipecho.net/plain',
                 'https://api.ipify.org',
                 'https://ipaddr.site',
-                'https://ifconfig.me/ip')
+                'https://ifconfig.me/ip',
+                'https://checkip.amazonaws.com/',
+                )
 
 IP6_WEBSITES = ('https://icanhazip.com',
                 'https://ident.me',
+                'https://tnedi.me/',
                 'https://curlmyip.net',
-                'https://ip.seeip.org',)
+                'https://ip.seeip.org',
+                'https://wtfismyip.com/text',
+                )
 
 IP_WEBSITES = IP4_WEBSITES + IP6_WEBSITES
 
